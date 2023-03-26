@@ -1,0 +1,21 @@
+{
+  "name": "@drezzyts/atlas.db",
+  "version": "1.0.9",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "tsx": "^3.12.5",
+    "typescript": "^5.0.2"
+  },
+  "scripts": {
+    "dev": "tsx src/index.spec.ts"
+  },
+  "keywords": ["localdb", "db", "database", "json", "json-db", "json-database", "local-database", "atlasdb", "atlas-db"],
+  "author": "drezzyts",
+  "license": "ISC",
+  "description": "This is a simple and powerful JSON local database library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drezzyts/atlas.db.git"
+  }
+}
