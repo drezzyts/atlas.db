@@ -17,7 +17,7 @@ npm i atlas.db
 ```js
 const Atlas = require('atlas.db');
 
-const Database = new Atlas.Database();
+const Database = Atlas.Database.getInstance();
 
 const UsersStructure = new Atlas.Structure({
   id: { type: String },
@@ -28,9 +28,13 @@ const Users = Database.createTable('users', UsersStructure);
 const user = Users.get('drezzy') || Users.create({ id: 'drezzy'})
 
 if(user){
-  user.coins += 2000;
+  user.coins = 2000;
   user.save();
 }
+
+user // { id: 'drezzy', coins: 2000 }
+user.omit('coins') // { id: 'drezzy' }
+user.pick('coins') // { coins: 2000 }
 ```
 ## Typescript
 > Typescript Example
@@ -42,7 +46,7 @@ interface IUser {
   coins?: number
 }
 
-const Database = new Atlas.Database();
+const Database = Atlas.Database.getInstance();
 
 const UsersStructure = new Atlas.Structure<IUser>({
   id: { type: String },
@@ -53,8 +57,11 @@ const Users = Database.createTable<IUser>('users', UsersStructure);
 const user = Users.get('drezzy') || Users.create({ id: 'drezzy'})
 
 if(user){
-  user.coins += 2000;
+  user.coins = 2000;
   user.save();
 }
 
+user // { id: 'drezzy', coins: 2000 }
+user.omit('coins') // { id: 'drezzy' }
+user.pick('coins') // { coins: 2000 }
 ```

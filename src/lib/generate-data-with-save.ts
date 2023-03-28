@@ -3,23 +3,33 @@ import ITableDataProps from '../interfaces/ITableDataProps';
 import { TableSchema } from '../types/TableSchema';
 
 import readFile from './read-file';
+import omitKeys from './table/omit-keys';
+import pickKeys from './table/pick-keys';
 import writeFile from './write-file';
 
 export default function generateDataWithSave<StructureData, TableData extends TableSchema<StructureData>>(path: string, tableData: TableData, structure: Structure<StructureData>){
 
-  function parseDataToSave(data: any){
+  function parseToRaw(data: any, save?: boolean){
     const rawData = { ...data }
 
-    delete rawData?.save
+    delete rawData?.save;
     delete rawData?.file_version;
+    delete rawData?.omit;
+    delete rawData?.pick;
 
-    data = rawData;
+    save ?? (data = rawData);
 
     return rawData;
   }
   
   return {
     ...tableData,
+    omit: function (...keys: Array<keyof TableData>) { 
+      return omitKeys<TableData>(parseToRaw(this as object), keys) 
+    },
+    pick: function (...keys: Array<keyof TableData>) { 
+      return pickKeys<TableData>(parseToRaw(this as object), keys) 
+    },
     save: function() {
       const data = readFile<StructureData>(path, structure)
 
@@ -30,9 +40,7 @@ export default function generateDataWithSave<StructureData, TableData extends Ta
       if(localDataIndex < 0)return false;
       
       this.file_version++
-      const rawData = parseDataToSave(this);
-
-      console.log(rawData)
+      const rawData = parseToRaw(this, true);
 
       data[localDataIndex] = rawData
       
